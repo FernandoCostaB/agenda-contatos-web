@@ -1,6 +1,12 @@
 <template>
   <div>
     <h3>Lista de contatos</h3>
+    <br/>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#novoContato">
+       Novo Contato
+    </button>
+    <br />
+    <br />
     <br />
     <div v-if="visible">
       <table class="table">
@@ -29,23 +35,50 @@
         </tbody>
       </table>
     </div>
+
+<!-- Modal Novo contato -->
+<div class="modal fade"  id="novoContato" tabindex="-1" role="dialog" aria-labelledby="novoContato" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="novoContato">Novo Contato</h5>
+      </div>
+      <div class="modal-body">
+        <Contato v-on:close="fecharModal" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="fechar" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
 <script>
 import { Axios } from './common/http-common'
+import Contato from './Contato.vue'
 
 export default {
+  components: {
+    Contato: Contato
+  },
   data () {
     return {
       contatos: [],
-      visible: false
+      visible: false,
+      show: false
     }
   },
   mounted () {
     this.listarContatos()
   },
   methods: {
+    fecharModal () {
+      var botao = document.getElementById('fechar')
+      botao.click()
+      this.listarContatos()
+    },
     listarContatos () {
       Axios.get('/contatos')
         .then(response => {
