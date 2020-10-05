@@ -10,7 +10,6 @@ import ListaTelefonica from './components/ListaTelefonica.vue'
 export default {
   name: 'App',
   components: {
-    // HelloWorld,
     ListaTelefonica
   }
 }
