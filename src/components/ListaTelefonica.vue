@@ -28,8 +28,8 @@
             <td>{{ contato.telefone }}</td>
             <td>{{ contato.email }}</td>
             <td>
-              <button @click="edit(item)" class="btn btn-info">Editar</button>
-              <button @click="remove(item)" class="btn btn-danger">Excluir</button>
+              <button @click="edit(contato)" data-toggle="modal" data-target="#editarContato" class="btn btn-info">Editar</button>
+              <button @click="remove(contato)" class="btn btn-danger">Excluir</button>
             </td>
           </tr>
         </tbody>
@@ -37,7 +37,7 @@
     </div>
 
 <!-- Modal Novo contato -->
-<div class="modal fade"  id="novoContato" tabindex="-1" role="dialog" aria-labelledby="novoContato" aria-hidden="true">
+<div class="modal fade"   id="novoContato" tabindex="-1" role="dialog" aria-labelledby="novoContato" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -52,28 +52,51 @@
     </div>
   </div>
 </div>
+
+<div v-if="show" class="modal fade"  id="editarContato" tabindex="-1" role="dialog" aria-labelledby="editarContato" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editarContato">Editar Contato</h5>
+      </div>
+      <div class="modal-body">
+        <Editar contato="contato"  v-on:close="fecharModal" />{{contato}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="fechar" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
 <script>
 import { Axios } from './common/http-common'
 import Contato from './Contato.vue'
+import Editar from './EditarContato.vue'
 
 export default {
   components: {
-    Contato: Contato
+    Contato: Contato,
+    Editar: Editar
   },
   data () {
     return {
       contatos: [],
       visible: false,
-      show: false
+      show: false,
+      contato: ''
     }
   },
   mounted () {
     this.listarContatos()
   },
   methods: {
+    edit (contatoToEdit) {
+      this.contato = contatoToEdit
+      this.show = true
+    },
     fecharModal () {
       var botao = document.getElementById('fechar')
       botao.click()
@@ -84,6 +107,16 @@ export default {
         .then(response => {
           this.contatos = response.data
           this.visible = true
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    remove (contato) {
+      if (!confirm('Deseja relamente excluir este contato?')) return false
+      Axios.delete('/contatos/' + contato.id)
+        .then(response => {
+          this.listarContatos()
         })
         .catch(function (error) {
           console.log(error)
