@@ -67,6 +67,7 @@ export default {
       Axios.post('/contatos', param)
         .then(response => {
           console.log(response)
+          this.$emit('close')
         })
         .catch(function (error) {
           console.log(error)

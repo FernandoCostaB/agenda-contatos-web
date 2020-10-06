@@ -60,10 +60,10 @@
         <h5 class="modal-title" id="editarContato">Editar Contato</h5>
       </div>
       <div class="modal-body">
-        <Editar contato="contato"  v-on:close="fecharModal" />{{contato}}
+        <Editar v-bind:contato="contato"  v-on:close="fecharModalEdicao" />
       </div>
       <div class="modal-footer">
-        <button type="button" id="fechar" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="fecharEdicao" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -96,6 +96,11 @@ export default {
     edit (contatoToEdit) {
       this.contato = contatoToEdit
       this.show = true
+    },
+    fecharModalEdicao () {
+      var botao = document.getElementById('fecharEdicao')
+      botao.click()
+      this.listarContatos()
     },
     fecharModal () {
       var botao = document.getElementById('fechar')

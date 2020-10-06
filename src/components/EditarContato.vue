@@ -58,9 +58,10 @@ export default {
   },
   methods: {
     alterarContato () {
-      Axios.put('/contatos', this.contato)
+      Axios.put('/contatos/' + this.contato.id, this.contato)
         .then(response => {
           console.log(response)
+          this.$emit('close')
         })
         .catch(function (error) {
           console.log(error)
